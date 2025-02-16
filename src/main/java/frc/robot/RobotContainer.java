@@ -65,11 +65,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_manipController.povUp().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L4_HEIGHT));
-    m_manipController.povRight().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L3_HEIGHT));
-    m_manipController.povDown().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L2_HEIGHT));
-    m_manipController.povLeft().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L1_HEIGHT));
-    m_manipController.leftTrigger(80).onTrue(m_elevator.setHeight(Constants.ElevatorConstants.STOW_HEIGHT));
+    m_manipController.povUp().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L3_HEIGHT));
+    m_manipController.povRight().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L2_HEIGHT));
+    m_manipController.povDown().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L1_HEIGHT));
+    m_manipController.povLeft().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.STOW_HEIGHT));
 
     // m_manipController.a().whileTrue(m_coral.deliverCoral());
     // m_manipController.b().whileTrue(m_algae.deliverAlgae());

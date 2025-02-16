@@ -53,7 +53,6 @@ public final class Constants {
     public static final double DRIVE_FF = 1/473;
   }
   public static class ElevatorConstants {
-    public static final double L4_HEIGHT = 0;
     public static final double L3_HEIGHT = 0;
     public static final double L2_HEIGHT = 0;
     public static final double L1_HEIGHT = 0;
