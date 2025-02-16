@@ -74,11 +74,11 @@ public class Drivetrain extends SubsystemBase {
       leftConfigL.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
       leftConfigL.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
       leftConfigL.closedLoop
-        .p(Constants.MotorConstants.DRIVE_P)
-        .i(Constants.MotorConstants.DRIVE_I)
-        .d(Constants.MotorConstants.DRIVE_D)
-        .velocityFF(Constants.MotorConstants.DRIVE_FF)
-        .outputRange(0.0, 1.0);
+        .p(Constants.DriveConstants.DRIVE_P)
+        .i(Constants.DriveConstants.DRIVE_I)
+        .d(Constants.DriveConstants.DRIVE_D)
+        .velocityFF(Constants.DriveConstants.DRIVE_FF)
+        .outputRange(-1.0, 1.0);
       leftDriveL.configure(leftConfigL, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
       leftDriveF = new SparkMax(Constants.MotorConstants.FOLLOWER_LEFT_MOTOR_ID,MotorType.kBrushless);
@@ -89,11 +89,11 @@ public class Drivetrain extends SubsystemBase {
       leftConfigF.inverted(Constants.MotorConstants.FOLLOWER_LEFT_MOTOR_INVERTED);
       leftConfigF.smartCurrentLimit(Constants.MotorConstants.FOLLOWER_LEFT_MOTOR_AMP_LIMIT);
       leftConfigF.closedLoop
-        .p(Constants.MotorConstants.DRIVE_P)
-        .i(Constants.MotorConstants.DRIVE_I)
-        .d(Constants.MotorConstants.DRIVE_D)
-        .velocityFF(Constants.MotorConstants.DRIVE_FF)
-        .outputRange(0.0, 1.0);
+        .p(Constants.DriveConstants.DRIVE_P)
+        .i(Constants.DriveConstants.DRIVE_I)
+        .d(Constants.DriveConstants.DRIVE_D)
+        .velocityFF(Constants.DriveConstants.DRIVE_FF)
+        .outputRange(-1.0, 1.0);
       leftDriveF.configure(leftConfigF, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
 
@@ -105,11 +105,11 @@ public class Drivetrain extends SubsystemBase {
       rightConfigL.inverted(Constants.MotorConstants.LEADER_RIGHT_MOTOR_INVERTED);
       rightConfigL.smartCurrentLimit(Constants.MotorConstants.LEADER_RIGHT_MOTOR_AMP_LIMIT);
       rightConfigL.closedLoop
-        .p(Constants.MotorConstants.DRIVE_P)
-        .i(Constants.MotorConstants.DRIVE_I)
-        .d(Constants.MotorConstants.DRIVE_D)
-        .velocityFF(Constants.MotorConstants.DRIVE_FF)
-        .outputRange(0.0, 1.0);
+        .p(Constants.DriveConstants.DRIVE_P)
+        .i(Constants.DriveConstants.DRIVE_I)
+        .d(Constants.DriveConstants.DRIVE_D)
+        .velocityFF(Constants.DriveConstants.DRIVE_FF)
+        .outputRange(-1.0, 1.0);
       rightDriveL.configure(rightConfigL, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
       rightDriveF = new SparkMax(Constants.MotorConstants.FOLLOWER_RIGHT_MOTOR_ID,MotorType.kBrushless);
@@ -120,11 +120,11 @@ public class Drivetrain extends SubsystemBase {
       rightConfigF.inverted(Constants.MotorConstants.FOLLOWER_RIGHT_MOTOR_INVERTED);
       rightConfigF.smartCurrentLimit(Constants.MotorConstants.FOLLOWER_RIGHT_MOTOR_AMP_LIMIT);
       rightConfigF.closedLoop
-        .p(Constants.MotorConstants.DRIVE_P)
-        .i(Constants.MotorConstants.DRIVE_I)
-        .d(Constants.MotorConstants.DRIVE_D)
-        .velocityFF(Constants.MotorConstants.DRIVE_FF)
-        .outputRange(0.0, 1.0);
+        .p(Constants.DriveConstants.DRIVE_P)
+        .i(Constants.DriveConstants.DRIVE_I)
+        .d(Constants.DriveConstants.DRIVE_D)
+        .velocityFF(Constants.DriveConstants.DRIVE_FF)
+        .outputRange(-1.0, 1.0);
       rightDriveF.configure(rightConfigF, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
 

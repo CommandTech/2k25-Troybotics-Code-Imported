@@ -38,15 +38,41 @@ public final class Constants {
     public static final boolean ALGAE_MOTOR_INVERTED = false;
     public static final int ALGAE_MOTOR_AMP_LIMIT = 40;
 
-    public static final double DRIVE_P = 0.1;
-    public static final double DRIVE_I = 0.0;
-    public static final double DRIVE_D = 0.1;
-    public static final double DRIVE_FF = 1/473; //Might be 1/565 if using vortex
+    public static final int ELEVATOR_MOTOR_ID = 7;
+    public static final boolean ELEVATOR_MOTOR_INVERTED = false;
+    public static final int ELEVATOR_MOTOR_AMP_LIMIT = 40;
   }
   public static class DriveConstants {
     public static final double GEAR_REDUCTION = 1.0;
     public static final double WHEEL_DIAMETER_METERS = 0.1524;
     public static final double TRACK_WIDTH_METERS = 0.6731;
+    
+    public static final double DRIVE_P = 0.1;
+    public static final double DRIVE_I = 0.0;
+    public static final double DRIVE_D = 0.1;
+    public static final double DRIVE_FF = 1/473;
+  }
+  public static class ElevatorConstants {
+    public static final double L4_HEIGHT = 0;
+    public static final double L3_HEIGHT = 0;
+    public static final double L2_HEIGHT = 0;
+    public static final double L1_HEIGHT = 0;
+
+    public static final double STOW_HEIGHT = 0;
+
+    public static final double ELEVATOR_TOP_LIMIT = 0;
+    public static final double ELEVATOR_BOTTOM_LIMIT = 0;
+    public static final double ELEVATOR_GEAR_RATIO = 0;
+
+    public static final double ELEVATOR_TOLERANCE = 0.5;
+
+    public static final double ELEVATOR_P = 0.1;
+    public static final double ELEVATOR_I = 0.0;
+    public static final double ELEVATOR_D = 0.1;
+    public static final double ELEVATOR_FF = 1/473;
+
+    public static final double ELEVATOR_MAX_VELOCITY = 0;
+    public static final double ELEVATOR_MAX_ACCELERATION = 0;
   }
   public static class OperatorConstants {
     public static final int DRIVER_PORT = 0;

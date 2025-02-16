@@ -28,8 +28,9 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drive = new Drivetrain();
-  private final Coral m_coral = new Coral();
-  private final Algae m_algae = new Algae();
+  private final Elevator m_elevator = new Elevator();
+  // private final Coral m_coral = new Coral();
+  // private final Algae m_algae = new Algae();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -64,8 +65,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_manipController.a().whileTrue(m_coral.deliverCoral());
-    m_manipController.b().whileTrue(m_algae.deliverAlgae());
+    m_manipController.povUp().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L4_HEIGHT));
+    m_manipController.povRight().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L3_HEIGHT));
+    m_manipController.povDown().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L2_HEIGHT));
+    m_manipController.povLeft().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L1_HEIGHT));
+    m_manipController.leftTrigger(80).onTrue(m_elevator.setHeight(Constants.ElevatorConstants.STOW_HEIGHT));
+
+    // m_manipController.a().whileTrue(m_coral.deliverCoral());
+    // m_manipController.b().whileTrue(m_algae.deliverAlgae());
   }
   public CommandXboxController getDriver() {
     return m_driverController;
