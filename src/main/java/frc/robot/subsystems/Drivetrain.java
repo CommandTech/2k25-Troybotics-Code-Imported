@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class Drivetrain extends SubsystemBase {
         .d(Constants.DriveConstants.DRIVE_D)
         .velocityFF(Constants.DriveConstants.DRIVE_FF)
         .outputRange(-1.0, 1.0);
+      leftConfigL.idleMode(IdleMode.kBrake);
       leftDriveL.configure(leftConfigL, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
       leftDriveF = new SparkMax(Constants.MotorConstants.FOLLOWER_LEFT_MOTOR_ID,MotorType.kBrushless);
@@ -93,6 +95,7 @@ public class Drivetrain extends SubsystemBase {
         .d(Constants.DriveConstants.DRIVE_D)
         .velocityFF(Constants.DriveConstants.DRIVE_FF)
         .outputRange(-1.0, 1.0);
+      leftConfigF.idleMode(IdleMode.kBrake);
       leftDriveF.configure(leftConfigF, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
 
@@ -109,6 +112,7 @@ public class Drivetrain extends SubsystemBase {
         .d(Constants.DriveConstants.DRIVE_D)
         .velocityFF(Constants.DriveConstants.DRIVE_FF)
         .outputRange(-1.0, 1.0);
+      rightConfigL.idleMode(IdleMode.kBrake);
       rightDriveL.configure(rightConfigL, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
       rightDriveF = new SparkMax(Constants.MotorConstants.FOLLOWER_RIGHT_MOTOR_ID,MotorType.kBrushless);
@@ -124,6 +128,7 @@ public class Drivetrain extends SubsystemBase {
         .d(Constants.DriveConstants.DRIVE_D)
         .velocityFF(Constants.DriveConstants.DRIVE_FF)
         .outputRange(-1.0, 1.0);
+      rightConfigF.idleMode(IdleMode.kBrake);
       rightDriveF.configure(rightConfigF, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
 

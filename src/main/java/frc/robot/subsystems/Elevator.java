@@ -13,6 +13,8 @@ import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -41,6 +43,7 @@ public class Elevator extends SubsystemBase {
       elevatorConfig = new SparkMaxConfig();
       elevatorConfig.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
       elevatorConfig.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
+      elevatorConfig.idleMode(IdleMode.kBrake);
       elevatorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .velocityFF(Constants.ElevatorConstants.ELEVATOR_FF)
@@ -60,7 +63,7 @@ public class Elevator extends SubsystemBase {
         elevatorSoftLimits.reverseSoftLimit(Constants.ElevatorConstants.ELEVATOR_TOP_LIMIT);
 
       elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-
+      
       m_controller = new ProfiledPIDController(ElevatorConstants.ELEVATOR_P,
                                               ElevatorConstants.ELEVATOR_I,
                                               ElevatorConstants.ELEVATOR_D,

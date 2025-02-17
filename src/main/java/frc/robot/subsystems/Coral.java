@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
@@ -21,6 +22,7 @@ public class Coral extends SubsystemBase {
       config = new SparkMaxConfig();
       config.inverted(Constants.MotorConstants.CORAL_MOTOR_INVERTED);
       config.smartCurrentLimit(Constants.MotorConstants.CORAL_MOTOR_AMP_LIMIT);
+      config.idleMode(IdleMode.kBrake);
 
       coralMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
   }
