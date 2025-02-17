@@ -69,6 +69,11 @@ public final class Constants {
     public static final double ELEVATOR_I = 0.0;
     public static final double ELEVATOR_D = 0.1;
     public static final double ELEVATOR_FF = 1/473;
+    
+    public static final double ELEVATOR_S = 0.01964; // volts (V)
+    public static final double ELEVATOR_V = 3.894; // volt per velocity (V/(m/s))
+    public static final double ELEVATOR_A = 0.173; // volt per acceleration (V/(m/s²))
+    public static final double ELEVATOR_G = 0.91274; // volts (V)
 
     public static final double ELEVATOR_MAX_VELOCITY = 0;
     public static final double ELEVATOR_MAX_ACCELERATION = 0;

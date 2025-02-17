@@ -12,18 +12,26 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-  private SparkMax elevator;
-  private SparkMaxConfig elevatorConfig;
-  private RelativeEncoder elevatorEncoder;
-  private SparkClosedLoopController elevatorController;
-  private double setpoint = 0;
+  private final SparkMax elevator;
+  private final SparkMaxConfig elevatorConfig;
+  private final RelativeEncoder elevatorEncoder;
+  private final SparkClosedLoopController elevatorController;
+  private final ProfiledPIDController m_controller;
+  private double setpoint;
+  private final ElevatorFeedforward m_feedforward;
+
   /** Creates a new Elevator. */
   public Elevator() {
       elevator = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
@@ -34,16 +42,14 @@ public class Elevator extends SubsystemBase {
       elevatorConfig.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
       elevatorConfig.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
       elevatorConfig.closedLoop
-        .p(Constants.ElevatorConstants.ELEVATOR_P)
-        .i(Constants.ElevatorConstants.ELEVATOR_I)
-        .d(Constants.ElevatorConstants.ELEVATOR_D)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .velocityFF(Constants.ElevatorConstants.ELEVATOR_FF)
         .outputRange(-1.0, 1.0);
       elevatorConfig.closedLoop.maxMotion
       .maxVelocity(Constants.ElevatorConstants.ELEVATOR_MAX_VELOCITY)
       .maxAcceleration(Constants.ElevatorConstants.ELEVATOR_MAX_ACCELERATION)
       .allowedClosedLoopError(Constants.ElevatorConstants.ELEVATOR_TOLERANCE);
-
+      
       EncoderConfig elevatorEncoderConfig = elevatorConfig.encoder;
         elevatorEncoderConfig.positionConversionFactor(Constants.ElevatorConstants.ELEVATOR_GEAR_RATIO);
 
@@ -54,14 +60,37 @@ public class Elevator extends SubsystemBase {
         elevatorSoftLimits.reverseSoftLimit(Constants.ElevatorConstants.ELEVATOR_TOP_LIMIT);
 
       elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-    }
+
+      m_controller = new ProfiledPIDController(ElevatorConstants.ELEVATOR_P,
+                                              ElevatorConstants.ELEVATOR_I,
+                                              ElevatorConstants.ELEVATOR_D,
+                                              new Constraints(ElevatorConstants.ELEVATOR_MAX_VELOCITY,
+                                                              ElevatorConstants.ELEVATOR_MAX_ACCELERATION));
+      setpoint = Constants.ElevatorConstants.STOW_HEIGHT;
+      
+      m_feedforward =
+          new ElevatorFeedforward(
+              ElevatorConstants.ELEVATOR_S,
+              ElevatorConstants.ELEVATOR_G,
+              ElevatorConstants.ELEVATOR_V,
+              ElevatorConstants.ELEVATOR_A);
+  }
 
   @Override
   public void periodic() {
-    //Should make the voltage less when it is closer to the setpoint exponentially
-    elevator.setVoltage(MathUtil.clamp(
-      (setpoint - getPosition())*Math.abs(setpoint - getPosition())
-    , -7, 7));
+    //Every 20 ms updates the volts the motor should run at
+    double voltsOut = MathUtil.clamp(
+        m_controller.calculate(getPosition(), setpoint) +
+        m_feedforward.calculateWithVelocities(getVelocityMetersPerSecond(),
+                                              m_controller.getSetpoint().velocity), -7, 7);
+
+    elevator.setVoltage(voltsOut);
+  }
+  
+  public double getVelocityMetersPerSecond()
+  {
+    return ((elevatorEncoder.getVelocity() / 60)/ ElevatorConstants.ELEVATOR_GEAR_RATIO) *
+           (2 * Math.PI * 0.05);
   }
 
   public void setPosition(double height){
@@ -73,11 +102,19 @@ public class Elevator extends SubsystemBase {
     return elevatorEncoder.getPosition();
   }
 
-  public boolean atSetpoint(){
-    return Math.abs(setpoint - getPosition()) < Constants.ElevatorConstants.ELEVATOR_TOLERANCE;
+  public Trigger atHeight(double height, double tolerance)
+  {
+    return new Trigger(() -> MathUtil.isNear(height,
+                                             getPosition(),
+                                             tolerance));
   }
 
-  
+  public void stop()
+  {
+    elevator.set(0.0);
+  }
+
+
   public Command setHeight(double height){
     return run(() -> setPosition(height));
   }
