@@ -53,15 +53,15 @@ public final class Constants {
     public static final double DRIVE_FF = 1/473;
   }
   public static class ElevatorConstants {
-    public static final double L3_HEIGHT = 0;
-    public static final double L2_HEIGHT = 0;
-    public static final double L1_HEIGHT = 0;
+    public static final double L3_HEIGHT = 500;
+    public static final double L2_HEIGHT = 250;
+    public static final double L1_HEIGHT = 100;
 
     public static final double STOW_HEIGHT = 0;
 
-    public static final double ELEVATOR_TOP_LIMIT = 0;
+    public static final double ELEVATOR_TOP_LIMIT = 500;
     public static final double ELEVATOR_BOTTOM_LIMIT = 0;
-    public static final double ELEVATOR_GEAR_RATIO = 0;
+    public static final double ELEVATOR_GEAR_RATIO = 1;
 
     public static final double ELEVATOR_TOLERANCE = 0.5;
 

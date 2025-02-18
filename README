@@ -1,0 +1,27 @@
+In case of trying to fix the code virtually:
+
+To find the top of the elevator:
+1. Open Rev's software
+2. Turn on the robot with the elevator at the bottom starting position
+3. Manually move the elevator to the highest point
+4. In Rev's software, find the motor that is for the elevator and read the encoder value
+5. Change ELEVATOR_TOP_LIMIT to the encoder value
+
+Finding the height of each scoring positon
+1. Copy the same steps from the previous instructions
+2. Instead of moving the elevator to the highest point, instead move it to the correct position to score
+4. In Rev's software, find the motor that is for the elevator and read the encoder value
+3. Change the corresponding constant in Constants (L1_HEIGHT, L2_HEIGHT, L3_HEIGHT, STOW_HEIGHT)
+
+Tuning PID for drive and elevator
+1. Run the Tuning Auto which will go from the wall of the driver station to against the reef
+2. If the robot went too far, lower DRIVE_P by a very small amount and try again
+If the robot did not go far enough, raise DRIVE_P by a very small amount and try again
+3. Run until the robot goes the correct distance.
+
+For elevator PID
+1. Set ELEVATOR_P, ELEVATOR_I, ELEVATOR_D to 0
+2. Enable the robot in teleop
+3. Press the button to go to L2
+4. Raise P until the elevator starts oscillating constantly
+5. Start raising D until it smoothly goes from Stow to L2 without overshooting
