@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -30,9 +31,9 @@ public class Elevator extends SubsystemBase {
   private final SparkMaxConfig elevatorConfig;
   private final RelativeEncoder elevatorEncoder;
   private final SparkClosedLoopController elevatorController;
-  private final ProfiledPIDController m_controller;
+  // private final ProfiledPIDController m_controller;
   private double setpoint;
-  private final ElevatorFeedforward m_feedforward;
+  // private final ElevatorFeedforward m_feedforward;
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -46,6 +47,9 @@ public class Elevator extends SubsystemBase {
       elevatorConfig.idleMode(IdleMode.kBrake);
       elevatorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .p(Constants.ElevatorConstants.ELEVATOR_P)
+        .i(Constants.ElevatorConstants.ELEVATOR_I)
+        .d(Constants.ElevatorConstants.ELEVATOR_D)
         .velocityFF(Constants.ElevatorConstants.ELEVATOR_FF)
         .outputRange(-1.0, 1.0);
       elevatorConfig.closedLoop.maxMotion
@@ -64,30 +68,33 @@ public class Elevator extends SubsystemBase {
 
       elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
-      m_controller = new ProfiledPIDController(ElevatorConstants.ELEVATOR_P,
-                                              ElevatorConstants.ELEVATOR_I,
-                                              ElevatorConstants.ELEVATOR_D,
-                                              new Constraints(ElevatorConstants.ELEVATOR_MAX_VELOCITY,
-                                                              ElevatorConstants.ELEVATOR_MAX_ACCELERATION));
+      // m_controller = new ProfiledPIDController(ElevatorConstants.ELEVATOR_P,
+      //                                         ElevatorConstants.ELEVATOR_I,
+      //                                         ElevatorConstants.ELEVATOR_D,
+      //                                         new Constraints(ElevatorConstants.ELEVATOR_MAX_VELOCITY,
+      //                                                         ElevatorConstants.ELEVATOR_MAX_ACCELERATION));
       setpoint = Constants.ElevatorConstants.STOW_HEIGHT;
       
-      m_feedforward =
-          new ElevatorFeedforward(
-              ElevatorConstants.ELEVATOR_S,
-              ElevatorConstants.ELEVATOR_G,
-              ElevatorConstants.ELEVATOR_V,
-              ElevatorConstants.ELEVATOR_A);
+      // m_feedforward =
+      //     new ElevatorFeedforward(
+      //         ElevatorConstants.ELEVATOR_S,
+      //         ElevatorConstants.ELEVATOR_G,
+      //         ElevatorConstants.ELEVATOR_V,
+      //         ElevatorConstants.ELEVATOR_A);
+
+      elevatorEncoder.setPosition(0);
   }
 
   @Override
   public void periodic() {
     //Every 20 ms updates the volts the motor should run at
-    double voltsOut = MathUtil.clamp(
-        m_controller.calculate(getPosition(), setpoint) +
-        m_feedforward.calculateWithVelocities(getVelocityMetersPerSecond(),
-                                              m_controller.getSetpoint().velocity), -7, 7);
+    // double voltsOut = MathUtil.clamp(
+    //     m_controller.calculate(getPosition(), setpoint) +
+    //     m_feedforward.calculateWithVelocities(getVelocityMetersPerSecond(),
+    //                                           m_controller.getSetpoint().velocity), -7, 7);
 
-    elevator.setVoltage(voltsOut);
+    // elevator.setVoltage(voltsOut);
+    elevatorController.setReference(setpoint, ControlType.kMAXMotionPositionControl);
   }
   
   public double getVelocityMetersPerSecond()
