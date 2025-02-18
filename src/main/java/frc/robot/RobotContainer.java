@@ -50,7 +50,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("Elevator P",Constants.ElevatorConstants.ELEVATOR_P);
     SmartDashboard.putNumber("Elevator I",Constants.ElevatorConstants.ELEVATOR_I);
     SmartDashboard.putNumber("Elevator D",Constants.ElevatorConstants.ELEVATOR_D);
-    m_drive.setDefaultCommand(new Drive(m_drive));
+
+    // m_drive.setDefaultCommand(new Drive(m_drive));
+    m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightY()));
     
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Leave", m_drive.followPathCommand("Leave"));

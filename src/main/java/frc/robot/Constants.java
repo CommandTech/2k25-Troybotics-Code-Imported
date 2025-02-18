@@ -51,6 +51,9 @@ public final class Constants {
     public static final double DRIVE_I = 0.0;
     public static final double DRIVE_D = 0.1;
     public static final double DRIVE_FF = 1/473;
+
+    public static final double DRIVE_S = 0.1;
+    public static final double DRIVE_V = 0.1;
   }
   public static class ElevatorConstants {
     public static final double L3_HEIGHT = 500;

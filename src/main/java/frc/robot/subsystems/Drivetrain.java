@@ -35,6 +35,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Drive;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 
 public class Drivetrain extends SubsystemBase {
@@ -60,7 +62,7 @@ public class Drivetrain extends SubsystemBase {
   private SparkClosedLoopController rightControllerF;
   private DifferentialDrivePoseEstimator poseEstimator;
   private DifferentialDriveWheelPositions wheelPositions;
-  
+
   private double lastLeftPositionMeters = 0.0;
   private double lastRightPositionMeters = 0.0;
 
@@ -156,7 +158,7 @@ public class Drivetrain extends SubsystemBase {
       } catch (ParseException e) {
         e.printStackTrace();
       }
-    
+  
 
     // Configure AutoBuilder last
     AutoBuilder.configure(
@@ -296,5 +298,9 @@ public class Drivetrain extends SubsystemBase {
         DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
         return Commands.none();
     }
+  }
+
+  public Command driveCommand(double leftSpeed, double rightSpeed){
+    return run(() -> drive(getRobotRelativeSpeeds(), null));
   }
 }
