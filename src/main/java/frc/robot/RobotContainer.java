@@ -43,6 +43,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    SmartDashboard.putNumber("Drive P",Constants.DriveConstants.DRIVE_P);
+    SmartDashboard.putNumber("Drive I",Constants.DriveConstants.DRIVE_I);
+    SmartDashboard.putNumber("Drive D",Constants.DriveConstants.DRIVE_D);
+
+    SmartDashboard.putNumber("Elevator P",Constants.ElevatorConstants.ELEVATOR_P);
+    SmartDashboard.putNumber("Elevator I",Constants.ElevatorConstants.ELEVATOR_I);
+    SmartDashboard.putNumber("Elevator D",Constants.ElevatorConstants.ELEVATOR_D);
     m_drive.setDefaultCommand(new Drive(m_drive));
     
     autoChooser = AutoBuilder.buildAutoChooser();
