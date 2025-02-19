@@ -38,9 +38,9 @@ public final class Constants {
     public static final boolean ALGAE_MOTOR_INVERTED = false;
     public static final int ALGAE_MOTOR_AMP_LIMIT = 40;
 
-    public static final int ELEVATOR_MOTOR_ID = 7;
-    public static final boolean ELEVATOR_MOTOR_INVERTED = false;
-    public static final int ELEVATOR_MOTOR_AMP_LIMIT = 40;
+    public static final int ARM_MOTOR_ID = 7;
+    public static final boolean ARM_MOTOR_INVERTED = false;
+    public static final int ARM_MOTOR_AMP_LIMIT = 40;
   }
   public static class DriveConstants {
     public static final double GEAR_REDUCTION = 1.0;
@@ -55,31 +55,31 @@ public final class Constants {
     public static final double DRIVE_S = 0.1;
     public static final double DRIVE_V = 0.1;
   }
-  public static class ElevatorConstants {
+  public static class ArmConstants {
     public static final double L3_HEIGHT = 500;
     public static final double L2_HEIGHT = 250;
     public static final double L1_HEIGHT = 100;
 
     public static final double STOW_HEIGHT = 0;
 
-    public static final double ELEVATOR_TOP_LIMIT = 500;
-    public static final double ELEVATOR_BOTTOM_LIMIT = 0;
-    public static final double ELEVATOR_GEAR_RATIO = 1;
+    public static final double ARM_TOP_LIMIT = 500;
+    public static final double ARM_BOTTOM_LIMIT = 0;
+    public static final double ARM_GEAR_RATIO = 100;
 
-    public static final double ELEVATOR_TOLERANCE = 0.5;
+    public static final double ARM_TOLERANCE = 0.5;
 
-    public static final double ELEVATOR_P = 0.1;
-    public static final double ELEVATOR_I = 0.0;
-    public static final double ELEVATOR_D = 0.1;
-    public static final double ELEVATOR_FF = 1/473;
+    public static final double ARM_P = 0.1;
+    public static final double ARM_I = 0.0;
+    public static final double ARM_D = 0.1;
+    public static final double ARM_FF = 1/473;
     
-    public static final double ELEVATOR_S = 0.01964; // volts (V)
-    public static final double ELEVATOR_V = 3.894; // volt per velocity (V/(m/s))
-    public static final double ELEVATOR_A = 0.173; // volt per acceleration (V/(m/s²))
-    public static final double ELEVATOR_G = 0.91274; // volts (V)
+    public static final double ARM_S = 0.01964; // volts (V)
+    public static final double ARM_V = 3.894; // volt per velocity (V/(m/s))
+    public static final double ARM_A = 0.173; // volt per acceleration (V/(m/s²))
+    public static final double ARM_G = 0.91274; // volts (V)
 
-    public static final double ELEVATOR_MAX_VELOCITY = 0;
-    public static final double ELEVATOR_MAX_ACCELERATION = 0;
+    public static final double ARM_MAX_VELOCITY = 0;
+    public static final double ARM_MAX_ACCELERATION = 0;
   }
   public static class OperatorConstants {
     public static final int DRIVER_PORT = 0;

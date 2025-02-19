@@ -28,7 +28,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drive = new Drivetrain();
-  private final Elevator m_elevator = new Elevator();
+  private final Arm m_elevator = new Arm();
   // private final Coral m_coral = new Coral();
   // private final Algae m_algae = new Algae();
 
@@ -47,9 +47,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("Drive I",Constants.DriveConstants.DRIVE_I);
     SmartDashboard.putNumber("Drive D",Constants.DriveConstants.DRIVE_D);
 
-    SmartDashboard.putNumber("Elevator P",Constants.ElevatorConstants.ELEVATOR_P);
-    SmartDashboard.putNumber("Elevator I",Constants.ElevatorConstants.ELEVATOR_I);
-    SmartDashboard.putNumber("Elevator D",Constants.ElevatorConstants.ELEVATOR_D);
+    SmartDashboard.putNumber("Arm P",Constants.ArmConstants.ARM_P);
+    SmartDashboard.putNumber("Arm I",Constants.ArmConstants.ARM_I);
+    SmartDashboard.putNumber("Arm D",Constants.ArmConstants.ARM_D);
 
     // m_drive.setDefaultCommand(new Drive(m_drive));
     m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightY()));
@@ -75,10 +75,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_manipController.povUp().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L3_HEIGHT));
-    m_manipController.povRight().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L2_HEIGHT));
-    m_manipController.povDown().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.L1_HEIGHT));
-    m_manipController.povLeft().onTrue(m_elevator.setHeight(Constants.ElevatorConstants.STOW_HEIGHT));
+    m_manipController.povUp().onTrue(m_elevator.setHeight(Constants.ArmConstants.L3_HEIGHT));
+    m_manipController.povRight().onTrue(m_elevator.setHeight(Constants.ArmConstants.L2_HEIGHT));
+    m_manipController.povDown().onTrue(m_elevator.setHeight(Constants.ArmConstants.L1_HEIGHT));
+    m_manipController.povLeft().onTrue(m_elevator.setHeight(Constants.ArmConstants.STOW_HEIGHT));
 
     // m_manipController.a().whileTrue(m_coral.deliverCoral());
     // m_manipController.b().whileTrue(m_algae.deliverAlgae());
