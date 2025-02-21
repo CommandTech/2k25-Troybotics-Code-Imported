@@ -42,7 +42,11 @@ public class Coral extends SubsystemBase {
     return runOnce(() -> setMotors(1));
   }
   public Command intakeCoral() {
-    // Deliver the coral
-    return runOnce(() -> setMotors(-1));
+    double current = coralMotor.getOutputCurrent();
+    // Intake the coral
+    if (current < Constants.CoralConstants.INTAKED_CORAL_AMPS) {
+      return runOnce(() -> setMotors(-1));
+    }
+    return runOnce(() -> setMotors(0));
   }
 }

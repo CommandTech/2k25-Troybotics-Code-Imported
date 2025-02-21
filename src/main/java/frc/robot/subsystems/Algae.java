@@ -38,12 +38,16 @@ public class Algae extends SubsystemBase {
   }
 
   public Command deliverAlgae() {
-    // Deliver the coral
+    // Deliver the algae
     return runOnce(() -> setMotors(1));
   }
   
   public Command intakeAlgae() {
-    // Deliver the coral
-    return runOnce(() -> setMotors(-1));
+    double current = algaeMotor.getOutputCurrent();
+    // Intake the algae
+    if (current < Constants.AlgaeConstants.INTAKED_ALGAE_AMPS) {
+      return runOnce(() -> setMotors(-1));
+    }
+    return runOnce(() -> setMotors(0));
   }
 }

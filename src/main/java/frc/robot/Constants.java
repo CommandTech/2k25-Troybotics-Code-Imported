@@ -13,6 +13,14 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class CoralConstants {
+    //Number of amps the motors spikes to when it has a piece in it
+    public static final double INTAKED_CORAL_AMPS = 30;
+  }
+  public static class AlgaeConstants {
+    //Number of amps the motors spikes to when it has a piece in it
+    public static final double INTAKED_ALGAE_AMPS = 30;
+  }
   public static class MotorConstants {
     public static final int LEADER_LEFT_MOTOR_ID = 1;
     public static final boolean LEADER_LEFT_MOTOR_INVERTED = true;
