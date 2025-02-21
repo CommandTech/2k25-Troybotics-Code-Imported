@@ -260,14 +260,14 @@ public class Drivetrain extends SubsystemBase {
     DifferentialDriveWheelSpeeds tankWheelsSpeeds = kinematics.toWheelSpeeds(speeds);
     tankWheelsSpeeds.desaturate(0.75);
 
-    differentialDrive.tankDrive(-tankWheelsSpeeds.leftMetersPerSecond, -tankWheelsSpeeds.rightMetersPerSecond);
+    differentialDrive.arcadeDrive(-tankWheelsSpeeds.leftMetersPerSecond, -tankWheelsSpeeds.rightMetersPerSecond);
   }
 
   public void drive(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
     DifferentialDriveWheelSpeeds tankWheelsSpeeds = kinematics.toWheelSpeeds(speeds);
     tankWheelsSpeeds.desaturate(0.75);
 
-    differentialDrive.tankDrive(-tankWheelsSpeeds.leftMetersPerSecond, -tankWheelsSpeeds.rightMetersPerSecond);
+    differentialDrive.arcadeDrive(-tankWheelsSpeeds.leftMetersPerSecond, -tankWheelsSpeeds.rightMetersPerSecond);
   }
 
   public Command followPathCommand(String pathName) {

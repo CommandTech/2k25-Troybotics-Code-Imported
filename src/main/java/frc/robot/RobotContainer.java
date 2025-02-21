@@ -28,9 +28,9 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drive = new Drivetrain();
-  private final Arm m_elevator = new Arm();
-  // private final Coral m_coral = new Coral();
-  // private final Algae m_algae = new Algae();
+  private final Arm m_arm = new Arm();
+  private final Coral m_coral = new Coral();
+  private final Algae m_algae = new Algae();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -52,7 +52,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Arm D",Constants.ArmConstants.ARM_D);
 
     // m_drive.setDefaultCommand(new Drive(m_drive));
-    m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightY()));
+    m_arm.setDefaultCommand(m_arm.idleCommand());
+    m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightX()));
+    m_coral.setDefaultCommand(m_coral.intakeCoral());
+    m_algae.setDefaultCommand(m_algae.intakeAlgae());
     
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Leave", m_drive.followPathCommand("Leave"));
@@ -75,13 +78,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_manipController.povUp().onTrue(m_elevator.setHeight(Constants.ArmConstants.L3_HEIGHT));
-    m_manipController.povRight().onTrue(m_elevator.setHeight(Constants.ArmConstants.L2_HEIGHT));
-    m_manipController.povDown().onTrue(m_elevator.setHeight(Constants.ArmConstants.L1_HEIGHT));
-    m_manipController.povLeft().onTrue(m_elevator.setHeight(Constants.ArmConstants.STOW_HEIGHT));
+    m_manipController.povUp().onTrue(m_arm.setHeight(Constants.ArmConstants.L3_HEIGHT));
+    m_manipController.povRight().onTrue(m_arm.setHeight(Constants.ArmConstants.L2_HEIGHT));
+    m_manipController.povDown().onTrue(m_arm.setHeight(Constants.ArmConstants.L1_HEIGHT));
+    m_manipController.povLeft().onTrue(m_arm.setHeight(Constants.ArmConstants.STOW_HEIGHT));
 
-    // m_manipController.a().whileTrue(m_coral.deliverCoral());
-    // m_manipController.b().whileTrue(m_algae.deliverAlgae());
+    m_manipController.a().whileTrue(m_coral.deliverCoral());
+    m_manipController.b().whileTrue(m_algae.deliverAlgae());
   }
   public CommandXboxController getDriver() {
     return m_driverController;

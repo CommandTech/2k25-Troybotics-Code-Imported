@@ -41,4 +41,9 @@ public class Algae extends SubsystemBase {
     // Deliver the coral
     return runOnce(() -> setMotors(1));
   }
+  
+  public Command intakeAlgae() {
+    // Deliver the coral
+    return runOnce(() -> setMotors(-1));
+  }
 }

@@ -127,4 +127,8 @@ public class Arm extends SubsystemBase {
   public Command setHeight(double height){
     return run(() -> setPosition(height));
   }
+
+  public Command idleCommand(){
+    return run(() -> setPosition(getPosition()));
+  }
 }
