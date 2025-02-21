@@ -26,62 +26,69 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
-  private final SparkMax elevator;
-  private final SparkMaxConfig elevatorConfig;
-  private final RelativeEncoder elevatorEncoder;
-  private final SparkClosedLoopController elevatorController;
+  private final SparkMax arm;
+  private final SparkMaxConfig armConfig;
+  private final RelativeEncoder armEncoder;
+  private final SparkClosedLoopController armController;
   // private final ProfiledPIDController m_controller;
   private double setpoint;
-  // private final ElevatorFeedforward m_feedforward;
+  // private final armFeedforward m_feedforward;
 
-  /** Creates a new Elevator. */
+  /** Creates a new arm. */
   public Arm() {
-      elevator = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
-      elevatorEncoder = elevator.getEncoder();
-      elevatorController = elevator.getClosedLoopController();
+      //creates an arm spark max
+      arm = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
+      //gets the encoder and the controller
+      armEncoder = arm.getEncoder();
+      armController = arm.getClosedLoopController();
 
-      elevatorConfig = new SparkMaxConfig();
-      elevatorConfig.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
-      elevatorConfig.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
-      elevatorConfig.idleMode(IdleMode.kBrake);
-      elevatorConfig.closedLoop
+      //creates the config
+      armConfig = new SparkMaxConfig();
+      armConfig.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
+      armConfig.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
+      armConfig.idleMode(IdleMode.kBrake);
+      armConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .p(Constants.ArmConstants.ARM_P)
         .i(Constants.ArmConstants.ARM_I)
         .d(Constants.ArmConstants.ARM_D)
         .velocityFF(Constants.ArmConstants.ARM_FF)
         .outputRange(-1.0, 1.0);
-      elevatorConfig.closedLoop.maxMotion
+      armConfig.closedLoop.maxMotion
       .maxVelocity(Constants.ArmConstants.ARM_MAX_VELOCITY)
       .maxAcceleration(Constants.ArmConstants.ARM_MAX_ACCELERATION)
       .allowedClosedLoopError(Constants.ArmConstants.ARM_TOLERANCE);
       
-      EncoderConfig elevatorEncoderConfig = elevatorConfig.encoder;
-        elevatorEncoderConfig.positionConversionFactor(Constants.ArmConstants.ARM_GEAR_RATIO);
+      //Sets the gear ratio of the encoder
+      EncoderConfig armEncoderConfig = armConfig.encoder;
+        armEncoderConfig.positionConversionFactor(Constants.ArmConstants.ARM_GEAR_RATIO);
 
-      SoftLimitConfig elevatorSoftLimits = elevatorConfig.softLimit;
-        elevatorSoftLimits.forwardSoftLimitEnabled(true);
-        elevatorSoftLimits.forwardSoftLimit(Constants.ArmConstants.ARM_TOP_LIMIT);
-        elevatorSoftLimits.reverseSoftLimitEnabled(true);
-        elevatorSoftLimits.reverseSoftLimit(Constants.ArmConstants.ARM_TOP_LIMIT);
+      //enables soft limits and sets them
+      SoftLimitConfig armSoftLimits = armConfig.softLimit;
+        armSoftLimits.forwardSoftLimitEnabled(true);
+        armSoftLimits.forwardSoftLimit(Constants.ArmConstants.ARM_TOP_LIMIT);
+        armSoftLimits.reverseSoftLimitEnabled(true);
+        armSoftLimits.reverseSoftLimit(Constants.ArmConstants.ARM_TOP_LIMIT);
 
-      elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+      arm.configure(armConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
-      // m_controller = new ProfiledPIDController(ElevatorConstants.ARM_P,
-      //                                         ElevatorConstants.ARM_I,
-      //                                         ElevatorConstants.ARM_D,
-      //                                         new Constraints(ElevatorConstants.ARM_MAX_VELOCITY,
-      //                                                         ElevatorConstants.ARM_MAX_ACCELERATION));
+      // m_controller = new ProfiledPIDController(armConstants.ARM_P,
+      //                                         armConstants.ARM_I,
+      //                                         armConstants.ARM_D,
+      //                                         new Constraints(armConstants.ARM_MAX_VELOCITY,
+      //                                                         armConstants.ARM_MAX_ACCELERATION));
+      //Defaults the setpoint to the stow height
       setpoint = Constants.ArmConstants.STOW_HEIGHT;
       
       // m_feedforward =
       //     new ArmFeedforward(
-      //         ElevatorConstants.ARM_S,
-      //         ElevatorConstants.ARM_G,
-      //         ElevatorConstants.ARM_V,
-      //         ElevatorConstants.ARM_A);
+      //         armConstants.ARM_S,
+      //         armConstants.ARM_G,
+      //         armConstants.ARM_V,
+      //         armConstants.ARM_A);
 
-      elevatorEncoder.setPosition(0);
+      //sets the encoder position to 0 at the start
+      armEncoder.setPosition(0);
   }
 
   @Override
@@ -92,43 +99,48 @@ public class Arm extends SubsystemBase {
     //     m_feedforward.calculateWithVelocities(getVelocityMetersPerSecond(),
     //                                           m_controller.getSetpoint().velocity), -7, 7);
 
-    // elevator.setVoltage(voltsOut);
-    elevatorController.setReference(setpoint, ControlType.kMAXMotionPositionControl);
+    // arm.setVoltage(voltsOut);
+    //Every 20 ms, the arm will set the reference to the desired setpoint
+    // armController.setReference(setpoint, ControlType.kMAXMotionPositionControl);
   }
   
-  public double getVelocityMetersPerSecond()
-  {
-    return ((elevatorEncoder.getVelocity() / 60)/ Constants.ArmConstants.ARM_GEAR_RATIO) *
+  public double getVelocityMetersPerSecond() {
+    //using the gear ratio and encoder velocity, determines the velocity of the arm
+    return ((armEncoder.getVelocity() / 60)/ Constants.ArmConstants.ARM_GEAR_RATIO) *
            (2 * Math.PI * 0.05);
   }
 
   public void setPosition(double height){
+    //sets setpoint to the desired height and sets the controller reference to the height
     setpoint = height;
-    elevatorController.setReference(height, SparkBase.ControlType.kMAXMotionPositionControl);
+    armController.setReference(height, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   public double getPosition(){
-    return elevatorEncoder.getPosition();
+    //gets the current position of the encoder
+    return armEncoder.getPosition();
   }
 
-  public Trigger atHeight(double height, double tolerance)
-  {
+  public Trigger atHeight(double height, double tolerance){
+    //returns if the arm is within tolerance of the desired height
     return new Trigger(() -> MathUtil.isNear(height,
                                              getPosition(),
                                              tolerance));
   }
 
-  public void stop()
-  {
-    elevator.set(0.0);
+  public void stop() {
+    //stops the arm's movement
+    arm.set(0.0);
   }
 
 
-  public Command setHeight(double height){
+  public Command setHeight(double height) {
+    //sets the desired height to the inputed height
     return run(() -> setPosition(height));
   }
 
-  public Command idleCommand(){
+  public Command idleCommand() {
+    //Keeps the arm at the current height
     return run(() -> setPosition(getPosition()));
   }
 }

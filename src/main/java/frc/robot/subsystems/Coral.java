@@ -18,12 +18,15 @@ public class Coral extends SubsystemBase {
   private SparkMaxConfig config;
   /** Creates a new Coral. */
   public Coral() {
+      //creates coral motor
       coralMotor = new SparkMax(Constants.MotorConstants.CORAL_MOTOR_ID, SparkMax.MotorType.kBrushless);
+      //creates the config for the motor
       config = new SparkMaxConfig();
       config.inverted(Constants.MotorConstants.CORAL_MOTOR_INVERTED);
       config.smartCurrentLimit(Constants.MotorConstants.CORAL_MOTOR_AMP_LIMIT);
       config.idleMode(IdleMode.kBrake);
 
+      //sets the configuration to the motor
       coralMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
   }
 
@@ -32,8 +35,9 @@ public class Coral extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  //1 to deliver 0 to stop
+  //1 to deliver 0 to stop -1 to intake
   public void setMotors(double value) {
+    //sets the motor speed to the inputed value
     coralMotor.set(value);
   }
 
@@ -44,6 +48,7 @@ public class Coral extends SubsystemBase {
   public Command intakeCoral() {
     double current = coralMotor.getOutputCurrent();
     // Intake the coral
+    //stops the motor if the current spikes up because the robot has a coral
     if (current < Constants.CoralConstants.INTAKED_CORAL_AMPS) {
       return runOnce(() -> setMotors(-1));
     }
