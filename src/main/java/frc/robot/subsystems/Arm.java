@@ -113,7 +113,7 @@ public class Arm extends SubsystemBase {
   public void setPosition(double height){
     //sets setpoint to the desired height and sets the controller reference to the height
     setpoint = height;
-    armController.setReference(height, SparkBase.ControlType.kMAXMotionPositionControl);
+    armController.setReference(setpoint, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   public double getPosition(){
@@ -121,9 +121,9 @@ public class Arm extends SubsystemBase {
     return armEncoder.getPosition();
   }
 
-  public Trigger atHeight(double height, double tolerance){
+  public Trigger atHeight(double tolerance){
     //returns if the arm is within tolerance of the desired height
-    return new Trigger(() -> MathUtil.isNear(height,
+    return new Trigger(() -> MathUtil.isNear(setpoint,
                                              getPosition(),
                                              tolerance));
   }

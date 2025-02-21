@@ -31,6 +31,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Coral m_coral = new Coral();
   private final Algae m_algae = new Algae();
+  private final Climber m_climber = new Climber();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -56,6 +57,7 @@ public class RobotContainer {
     m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightX()));
     m_coral.setDefaultCommand(m_coral.intakeCoral());
     m_algae.setDefaultCommand(m_algae.intakeAlgae());
+    m_climber.setDefaultCommand(m_climber.idleCommand());
     
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Leave", m_drive.followPathCommand("Leave"));
@@ -85,6 +87,8 @@ public class RobotContainer {
 
     m_manipController.a().whileTrue(m_coral.deliverCoral());
     m_manipController.b().whileTrue(m_algae.deliverAlgae());
+    
+    m_manipController.x().onTrue(m_climber.toggleClimber());
   }
   public CommandXboxController getDriver() {
     return m_driverController;

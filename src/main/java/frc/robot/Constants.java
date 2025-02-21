@@ -13,6 +13,27 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class ClimberConstants {
+    public static final double CLIMBER_GEAR_RATIO = 100;
+    public static final double CLIMBER_READY_ANGLE = 90;
+    public static final double CLIMBER_CLIMBED_ANGLE = 10;
+    public static final double CLIMBER_STOWED_ANGLE = 0;
+
+    //Arm PID
+    public static final double CLIMBER_P = 0.1;
+    public static final double CLIMBER_I = 0.0;
+    public static final double CLIMBER_D = 0.1;
+    public static final double CLIMBER_FF = 1/473;
+    
+    public static final double CLIMBER_S = 0.01964; // volts (V)
+    public static final double CLIMBER_V = 3.894; // volt per velocity (V/(m/s))
+    public static final double CLIMBER_A = 0.173; // volt per acceleration (V/(m/s²))
+    public static final double CLIMBER_G = 0.91274; // volts (V)
+    
+    public static final double CLIMBER_TOLERANCE = 0.5;
+    public static final double CLIMBER_MAX_VELOCITY = 5;
+    public static final double CLIMBER_MAX_ACCELERATION = 5;
+  }
   public static class CoralConstants {
     //Number of amps the motors spikes to when it has a piece in it
     public static final double INTAKED_CORAL_AMPS = 30;
@@ -56,6 +77,11 @@ public final class Constants {
     public static final int ARM_MOTOR_ID = 7;
     public static final boolean ARM_MOTOR_INVERTED = false;
     public static final int ARM_MOTOR_AMP_LIMIT = 40;
+    
+    //Climber motor constants
+    public static final int CLIMBER_MOTOR_ID = 8;
+    public static final boolean CLIMBER_MOTOR_INVERTED = false;
+    public static final int CLIMBER_MOTOR_AMP_LIMIT = 40;
   }
   public static class DriveConstants {
     //Gear ratio on the drivetrain
