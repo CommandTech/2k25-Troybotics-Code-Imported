@@ -18,7 +18,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,10 +31,13 @@ public class Arm extends SubsystemBase {
   private final SparkMax arm;
   private final SparkMaxConfig armConfig;
   private final RelativeEncoder armEncoder;
-  private final SparkClosedLoopController armController;
-  // private final ProfiledPIDController m_controller;
-  private double setpoint;
-  // private final armFeedforward m_feedforward;
+  // private final SparkClosedLoopController armController;
+  private final PIDController pidController;
+  private final TrapezoidProfile.Constraints constraints;
+  private TrapezoidProfile.State goalState;
+  private TrapezoidProfile.State currentState;
+  private final TrapezoidProfile profile;
+  private double setpoint = 0.0;
 
   /** Creates a new arm. */
   public Arm() {
@@ -40,24 +45,24 @@ public class Arm extends SubsystemBase {
       arm = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
       //gets the encoder and the controller
       armEncoder = arm.getEncoder();
-      armController = arm.getClosedLoopController();
+      // armController = arm.getClosedLoopController();
 
       //creates the config
       armConfig = new SparkMaxConfig();
       armConfig.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
       armConfig.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
       armConfig.idleMode(IdleMode.kBrake);
-      armConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .p(Constants.ArmConstants.ARM_P)
-        .i(Constants.ArmConstants.ARM_I)
-        .d(Constants.ArmConstants.ARM_D)
-        .velocityFF(Constants.ArmConstants.ARM_FF)
-        .outputRange(-1.0, 1.0);
-      armConfig.closedLoop.maxMotion
-      .maxVelocity(Constants.ArmConstants.ARM_MAX_VELOCITY)
-      .maxAcceleration(Constants.ArmConstants.ARM_MAX_ACCELERATION)
-      .allowedClosedLoopError(Constants.ArmConstants.ARM_TOLERANCE);
+      // armConfig.closedLoop
+      //   .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+      //   .p(Constants.ArmConstants.ARM_P)
+      //   .i(Constants.ArmConstants.ARM_I)
+      //   .d(Constants.ArmConstants.ARM_D)
+      //   .velocityFF(Constants.ArmConstants.ARM_FF)
+      //   .outputRange(-1.0, 1.0);
+      // armConfig.closedLoop.maxMotion
+      // .maxVelocity(Constants.ArmConstants.ARM_MAX_VELOCITY)
+      // .maxAcceleration(Constants.ArmConstants.ARM_MAX_ACCELERATION)
+      // .allowedClosedLoopError(Constants.ArmConstants.ARM_TOLERANCE);
       
       //Sets the gear ratio of the encoder
       EncoderConfig armEncoderConfig = armConfig.encoder;
@@ -72,20 +77,23 @@ public class Arm extends SubsystemBase {
 
       arm.configure(armConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
       
-      // m_controller = new ProfiledPIDController(armConstants.ARM_P,
-      //                                         armConstants.ARM_I,
-      //                                         armConstants.ARM_D,
-      //                                         new Constraints(armConstants.ARM_MAX_VELOCITY,
-      //                                                         armConstants.ARM_MAX_ACCELERATION));
-      //Defaults the setpoint to the stow height
-      setpoint = Constants.ArmConstants.STOW_HEIGHT;
+      constraints = new TrapezoidProfile.Constraints(
+          Constants.ArmConstants.ARM_MAX_VELOCITY,
+          Constants.ArmConstants.ARM_MAX_ACCELERATION
+      );
       
-      // m_feedforward =
-      //     new ArmFeedforward(
-      //         armConstants.ARM_S,
-      //         armConstants.ARM_G,
-      //         armConstants.ARM_V,
-      //         armConstants.ARM_A);
+      pidController = new PIDController(
+          Constants.ArmConstants.ARM_P,
+          Constants.ArmConstants.ARM_I,
+          Constants.ArmConstants.ARM_D
+      );
+      
+      pidController.setTolerance(Constants.ArmConstants.ARM_TOLERANCE);
+
+      // Initialize states and profile
+      currentState = new TrapezoidProfile.State(0, 0);
+      goalState = new TrapezoidProfile.State(0, 0);
+      profile = new TrapezoidProfile(constraints);
 
       //sets the encoder position to 0 at the start
       armEncoder.setPosition(0);
@@ -94,14 +102,20 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     //Every 20 ms updates the volts the motor should run at
-    // double voltsOut = MathUtil.clamp(
-    //     m_controller.calculate(getPosition(), setpoint) +
-    //     m_feedforward.calculateWithVelocities(getVelocityMetersPerSecond(),
-    //                                           m_controller.getSetpoint().velocity), -7, 7);
-
     // arm.setVoltage(voltsOut);
     //Every 20 ms, the arm will set the reference to the desired setpoint
-    // armController.setReference(setpoint, ControlType.kMAXMotionPositionControl);
+    currentState = profile.calculate(0.020, currentState, goalState); // 20ms control loop
+
+    double pidOutput = pidController.calculate(getPosition(), currentState.position);
+            double ff = calculateFeedForward(currentState);
+            
+            double outputPower = MathUtil.clamp(
+                pidOutput + ff,
+                -7,
+                7
+            );
+
+    arm.set(outputPower);
   }
   
   public double getVelocityMetersPerSecond() {
@@ -113,7 +127,8 @@ public class Arm extends SubsystemBase {
   public void setPosition(double height){
     //sets setpoint to the desired height and sets the controller reference to the height
     setpoint = height;
-    armController.setReference(setpoint, SparkBase.ControlType.kMAXMotionPositionControl);
+    // armController.setReference(setpoint, SparkBase.ControlType.kMAXMotionPositionControl);
+    goalState = new TrapezoidProfile.State(setpoint, 0);
   }
 
   public double getPosition(){
@@ -131,6 +146,7 @@ public class Arm extends SubsystemBase {
   public void stop() {
     //stops the arm's movement
     arm.set(0.0);
+    pidController.reset();
   }
 
 
@@ -143,4 +159,11 @@ public class Arm extends SubsystemBase {
     //Keeps the arm at the current height
     return run(() -> setPosition(getPosition()));
   }
+
+  private double calculateFeedForward(TrapezoidProfile.State state) {
+    // kS (static friction), kG (gravity), kV (velocity),
+    return Constants.ArmConstants.ARM_S * Math.signum(state.velocity) +
+           Constants.ArmConstants.ARM_G +
+           Constants.ArmConstants.ARM_V * state.velocity;
+}
 }
