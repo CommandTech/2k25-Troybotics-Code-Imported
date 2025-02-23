@@ -102,9 +102,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     //Every 20 ms updates the volts the motor should run at
-    // arm.setVoltage(voltsOut);
-    //Every 20 ms, the arm will set the reference to the desired setpoint
-    currentState = profile.calculate(0.020, currentState, goalState); // 20ms control loop
+    currentState = profile.calculate(0.020, currentState, goalState);
 
     double pidOutput = pidController.calculate(getPosition(), currentState.position);
             double ff = calculateFeedForward(currentState);
@@ -148,7 +146,6 @@ public class Arm extends SubsystemBase {
     arm.set(0.0);
     pidController.reset();
   }
-
 
   public Command setHeight(double height) {
     //sets the desired height to the inputed height
