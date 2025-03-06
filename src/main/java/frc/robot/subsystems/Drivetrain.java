@@ -9,7 +9,13 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.json.simple.parser.ParseException;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -23,11 +29,16 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -36,6 +47,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Drive;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 
@@ -66,8 +79,16 @@ public class Drivetrain extends SubsystemBase {
   private double lastLeftPositionMeters = 0.0;
   private double lastRightPositionMeters = 0.0;
 
+  private PhotonCamera camera;
+  //x y z (meters)
+  //roll, pitch, yaw (radians)
+  private static final Pose3d ROBOT_TO_CAMERA = new Pose3d(Units.inchesToMeters(12.), Units.inchesToMeters(2.), 0.,
+            new Rotation3d(0., Units.degreesToRadians(56.), Units.degreesToRadians(0.)));
+
   /** Creates a new Drive. */
   public Drivetrain() {
+      camera = new PhotonCamera("photonvision");
+
       leftDriveL = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
       leftEncoderL = leftDriveL.getEncoder();
       leftControllerL = leftDriveL.getClosedLoopController();
@@ -185,6 +206,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // // This method will be called once per scheduler run
     // double leftPositionMetersDelta =
     //   getLeftPositionMeters() - lastLeftPositionMeters;
@@ -203,9 +225,12 @@ public class Drivetrain extends SubsystemBase {
     // lastLeftPositionMeters = getLeftPositionMeters();
     // lastRightPositionMeters = getRightPositionMeters();
 
+    Pose2d visionPose = GetBestPose();
+
     wheelPositions = new DifferentialDriveWheelPositions(leftEncoderL.getPosition(), rightEncoderL.getPosition());
 
     poseEstimator.updateWithTime(Timer.getFPGATimestamp(), new Rotation2d(), wheelPositions);
+    poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
     pose = poseEstimator.getEstimatedPosition();
   }
 
@@ -302,5 +327,27 @@ public class Drivetrain extends SubsystemBase {
 
   public Command driveCommand(double leftSpeed, double rightSpeed){
     return run(() -> drive(getRobotRelativeSpeeds(), null));
+  }
+
+  public Pose2d GetBestPose(){
+    var result = camera.getLatestResult();
+    if (result != null){
+      PhotonTrackedTarget bestTarget = result.getBestTarget();
+      Transform3d bestPose = bestTarget.getBestCameraToTarget();
+
+
+      //no idea what this does, need to test
+      Pose3d bestPose3d = new Pose3d(bestPose.getTranslation(), bestPose.getRotation());
+      
+      Rotation2d newRotation = Rotation2d.fromDegrees(bestPose3d.getRotation().getAngle() - 180.);
+
+      Pose2d finalPose = new Pose2d(bestPose3d.getTranslation().toTranslation2d(), newRotation).plus(
+        new Transform2d(
+                ROBOT_TO_CAMERA.getTranslation().toTranslation2d(),
+                ROBOT_TO_CAMERA.getRotation().toRotation2d()));
+
+      return finalPose;
+    }
+    return new Pose2d();
   }
 }
