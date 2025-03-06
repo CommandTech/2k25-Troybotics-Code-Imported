@@ -80,6 +80,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.leftBumper().onTrue(m_drive.DriveToStation());
+
     m_manipController.povUp().onTrue(m_arm.setHeight(Constants.ArmConstants.L3_HEIGHT));
     m_manipController.povRight().onTrue(m_arm.setHeight(Constants.ArmConstants.L2_HEIGHT));
     m_manipController.povDown().onTrue(m_arm.setHeight(Constants.ArmConstants.L1_HEIGHT));

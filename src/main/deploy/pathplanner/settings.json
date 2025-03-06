@@ -3,9 +3,10 @@
   "robotLength": 0.9,
   "holonomicMode": false,
   "pathFolders": [
-    "Auto RP Paths",
-    "Leave Auto Paths",
-    "Multi Coral"
+    "ARP",
+    "Leave",
+    "MC",
+    "DriveToStation"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

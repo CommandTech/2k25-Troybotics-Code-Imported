@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Drive;
@@ -349,5 +350,14 @@ public class Drivetrain extends SubsystemBase {
       return finalPose;
     }
     return new Pose2d();
+  }
+
+  public Command DriveToStation(){
+    if (pose.getY() > 4){
+      //Blue station
+      return run(() -> followPathCommand("DriveToBlueStation"));
+    }
+    //Red Station
+    return run(() -> followPathCommand("DriveToRedStation"));
   }
 }
