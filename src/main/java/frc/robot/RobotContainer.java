@@ -56,8 +56,8 @@ public class RobotContainer {
     autoChooser.addOption("Leave", m_drive.followPathCommand("Leave"));
     autoChooser.addOption("Auto RP", m_drive.followPathCommand("Auto RP"));
     autoChooser.addOption("2 Coral", m_drive.followPathCommand("2 Coral"));
-    autoChooser.addOption("Tuning Auto", m_drive.followPathCommand("Tuning_Auto"));
-
+    autoChooser.addOption("Tuning Auto", m_drive.followPathCommand("TuningAuto"));
+    
     SmartDashboard.putData("Auto Chooser", autoChooser);
     // Configure the trigger bindings
     configureBindings();

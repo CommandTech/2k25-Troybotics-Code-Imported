@@ -30,7 +30,7 @@ public class Algae extends SubsystemBase {
 
       //sets the configuration to the motor
       algaeMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-      SmartDashboard.putBoolean("hasAlgae", hasAlgae);
+      SmartDashboard.putBoolean("Has Algae", hasAlgae);
   }
 
   @Override

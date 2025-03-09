@@ -31,7 +31,7 @@ public class Coral extends SubsystemBase {
       //sets the configuration to the motor
       coralMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
-      SmartDashboard.putBoolean("hasCoral", hasCoral);
+      SmartDashboard.putBoolean("Has Coral", hasCoral);
   }
 
   @Override

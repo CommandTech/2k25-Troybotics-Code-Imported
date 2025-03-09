@@ -109,6 +109,10 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Drive S",Constants.DriveConstants.DRIVE_S);
     SmartDashboard.putNumber("Drive V",Constants.DriveConstants.DRIVE_V);
+    
+    SmartDashboard.putData("DriveToStation Command", RobotContainer.getInstance().getDrivetrain().DriveToStation());
+    SmartDashboard.putData("Tuning Path Command", RobotContainer.getInstance().getDrivetrain().followPathCommand("TuningAuto"));
+
 
     SmartDashboard.putNumber("Arm P",Constants.ArmConstants.ARM_P);
     SmartDashboard.putNumber("Arm I",Constants.ArmConstants.ARM_I);
@@ -118,6 +122,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Arm V",Constants.ArmConstants.ARM_V);
     SmartDashboard.putNumber("Arm A",Constants.ArmConstants.ARM_A);
     SmartDashboard.putNumber("Arm G",Constants.ArmConstants.ARM_G);
+
+    SmartDashboard.putData("Arm to L3 Command", RobotContainer.getInstance().getArm().setHeight(Constants.ArmConstants.L3_HEIGHT));
+    SmartDashboard.putData("Arm to L2 Command", RobotContainer.getInstance().getArm().setHeight(Constants.ArmConstants.L2_HEIGHT));
+    SmartDashboard.putData("Arm to L1 Command", RobotContainer.getInstance().getArm().setHeight(Constants.ArmConstants.L1_HEIGHT));
+    SmartDashboard.putData("Arm to Stow Command", RobotContainer.getInstance().getArm().setHeight(Constants.ArmConstants.STOW_HEIGHT));
     
     SmartDashboard.putNumber("Climber P",Constants.ClimberConstants.CLIMBER_P);
     SmartDashboard.putNumber("Climber I",Constants.ClimberConstants.CLIMBER_I);
@@ -128,6 +137,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Climber A",Constants.ClimberConstants.CLIMBER_A);
     SmartDashboard.putNumber("Climber G",Constants.ClimberConstants.CLIMBER_G);
 
+    SmartDashboard.putData("Climber Deploy", RobotContainer.getInstance().getClimber().setHeight(Constants.ClimberConstants.CLIMBER_READY_ANGLE));
+    SmartDashboard.putData("Climber Retract", RobotContainer.getInstance().getArm().setHeight(Constants.ClimberConstants.CLIMBER_CLIMBED_ANGLE));
+    SmartDashboard.putData("Climber Toggle", RobotContainer.getInstance().getClimber().toggleClimber());
+    
+    SmartDashboard.putData("Deliver Coral", RobotContainer.getInstance().getCoral().deliverCoral());
+    SmartDashboard.putData("Intake Coral", RobotContainer.getInstance().getCoral().intakeCoral());
+    SmartDashboard.putData("Stop Coral Intake", RobotContainer.getInstance().getCoral().stopIntake());
+    
+    SmartDashboard.putData("Deliver Algae", RobotContainer.getInstance().getAlgae().deliverAlgae());
+    SmartDashboard.putData("Intake Algae", RobotContainer.getInstance().getAlgae().intakeAlgae());
+    SmartDashboard.putData("Stop Algae Intake", RobotContainer.getInstance().getAlgae().stopIntake());
+    
     CommandScheduler.getInstance().run();
   }
 
