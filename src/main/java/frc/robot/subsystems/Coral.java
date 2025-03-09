@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,6 +17,7 @@ import frc.robot.Constants;
 public class Coral extends SubsystemBase {
   private SparkMax coralMotor;
   private SparkMaxConfig config;
+  private boolean hasCoral = false;
   /** Creates a new Coral. */
   public Coral() {
       //creates coral motor
@@ -28,6 +30,8 @@ public class Coral extends SubsystemBase {
 
       //sets the configuration to the motor
       coralMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+      SmartDashboard.putBoolean("hasCoral", hasCoral);
   }
 
   @Override
@@ -43,7 +47,8 @@ public class Coral extends SubsystemBase {
 
   public Command deliverCoral() {
     // Deliver the coral
-    return runOnce(() -> setMotors(1));
+    setMotors(1);
+    return runOnce(() -> hasCoral = false);
   }
   public Command intakeCoral() {
     double current = coralMotor.getOutputCurrent();
@@ -52,6 +57,10 @@ public class Coral extends SubsystemBase {
     if (current < Constants.CoralConstants.INTAKED_CORAL_AMPS) {
       return runOnce(() -> setMotors(-1));
     }
+    hasCoral = true;
+    return stopIntake();
+  }
+  public Command stopIntake(){
     return runOnce(() -> setMotors(0));
   }
 }

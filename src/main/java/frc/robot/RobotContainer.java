@@ -5,12 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -54,7 +52,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("Arm I",Constants.ArmConstants.ARM_I);
     SmartDashboard.putNumber("Arm D",Constants.ArmConstants.ARM_D);
 
-    // m_drive.setDefaultCommand(new Drive(m_drive));
     m_arm.setDefaultCommand(m_arm.idleCommand());
     m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightX()));
     m_coral.setDefaultCommand(m_coral.intakeCoral());

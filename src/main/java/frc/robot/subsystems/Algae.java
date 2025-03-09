@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,6 +17,7 @@ import frc.robot.Constants;
 public class Algae extends SubsystemBase {
   private SparkMax algaeMotor;
   private SparkMaxConfig config;
+  private boolean hasAlgae = false;
   /** Creates a new Algae. */
   public Algae() {
       //creates a new SparkMax with the CanID of ALGAE_MOTOR_ID constant
@@ -28,6 +30,7 @@ public class Algae extends SubsystemBase {
 
       //sets the configuration to the motor
       algaeMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+      SmartDashboard.putBoolean("hasAlgae", hasAlgae);
   }
 
   @Override
@@ -42,7 +45,8 @@ public class Algae extends SubsystemBase {
 
   public Command deliverAlgae() {
     // Deliver the algae
-    return runOnce(() -> setMotors(1));
+    setMotors(1);
+    return runOnce(() -> hasAlgae = false);
   }
   
   public Command intakeAlgae() {
@@ -51,6 +55,11 @@ public class Algae extends SubsystemBase {
     if (current < Constants.AlgaeConstants.INTAKED_ALGAE_AMPS) {
       return runOnce(() -> setMotors(-1));
     }
+    hasAlgae = true;
+    return stopIntake();
+  }
+
+  public Command stopIntake(){
     return runOnce(() -> setMotors(0));
   }
 }

@@ -6,22 +6,16 @@ package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,7 +25,6 @@ public class Arm extends SubsystemBase {
   private final SparkMax arm;
   private final SparkMaxConfig armConfig;
   private final RelativeEncoder armEncoder;
-  // private final SparkClosedLoopController armController;
   private final PIDController pidController;
   private final TrapezoidProfile.Constraints constraints;
   private TrapezoidProfile.State goalState;
@@ -45,24 +38,12 @@ public class Arm extends SubsystemBase {
       arm = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
       //gets the encoder and the controller
       armEncoder = arm.getEncoder();
-      // armController = arm.getClosedLoopController();
 
       //creates the config
       armConfig = new SparkMaxConfig();
       armConfig.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
       armConfig.smartCurrentLimit(Constants.MotorConstants.LEADER_LEFT_MOTOR_AMP_LIMIT);
       armConfig.idleMode(IdleMode.kBrake);
-      // armConfig.closedLoop
-      //   .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      //   .p(Constants.ArmConstants.ARM_P)
-      //   .i(Constants.ArmConstants.ARM_I)
-      //   .d(Constants.ArmConstants.ARM_D)
-      //   .velocityFF(Constants.ArmConstants.ARM_FF)
-      //   .outputRange(-1.0, 1.0);
-      // armConfig.closedLoop.maxMotion
-      // .maxVelocity(Constants.ArmConstants.ARM_MAX_VELOCITY)
-      // .maxAcceleration(Constants.ArmConstants.ARM_MAX_ACCELERATION)
-      // .allowedClosedLoopError(Constants.ArmConstants.ARM_TOLERANCE);
       
       //Sets the gear ratio of the encoder
       EncoderConfig armEncoderConfig = armConfig.encoder;
@@ -125,7 +106,6 @@ public class Arm extends SubsystemBase {
   public void setPosition(double height){
     //sets setpoint to the desired height and sets the controller reference to the height
     setpoint = height;
-    // armController.setReference(setpoint, SparkBase.ControlType.kMAXMotionPositionControl);
     goalState = new TrapezoidProfile.State(setpoint, 0);
   }
 

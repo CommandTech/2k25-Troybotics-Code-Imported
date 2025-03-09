@@ -9,12 +9,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -25,7 +22,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -44,13 +40,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Drive;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 
 public class Drivetrain extends SubsystemBase {
@@ -67,18 +58,9 @@ public class Drivetrain extends SubsystemBase {
   private SparkMaxConfig rightConfigL;
   private SparkMaxConfig rightConfigF;
   private RelativeEncoder leftEncoderL;
-  private RelativeEncoder leftEncoderF;
   private RelativeEncoder rightEncoderL;
-  private RelativeEncoder rightEncoderF;
-  private SparkClosedLoopController leftControllerL;
-  private SparkClosedLoopController leftControllerF;
-  private SparkClosedLoopController rightControllerL;
-  private SparkClosedLoopController rightControllerF;
   private DifferentialDrivePoseEstimator poseEstimator;
   private DifferentialDriveWheelPositions wheelPositions;
-
-  private double lastLeftPositionMeters = 0.0;
-  private double lastRightPositionMeters = 0.0;
 
   private PhotonCamera camera;
   //x y z (meters)
@@ -92,7 +74,6 @@ public class Drivetrain extends SubsystemBase {
 
       leftDriveL = new SparkMax(Constants.MotorConstants.LEADER_LEFT_MOTOR_ID,MotorType.kBrushless);
       leftEncoderL = leftDriveL.getEncoder();
-      leftControllerL = leftDriveL.getClosedLoopController();
 
       leftConfigL = new SparkMaxConfig();
       leftConfigL.inverted(Constants.MotorConstants.LEADER_LEFT_MOTOR_INVERTED);
@@ -107,8 +88,6 @@ public class Drivetrain extends SubsystemBase {
       leftDriveL.configure(leftConfigL, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
       leftDriveF = new SparkMax(Constants.MotorConstants.FOLLOWER_LEFT_MOTOR_ID,MotorType.kBrushless);
-      leftEncoderF = leftDriveF.getEncoder();
-      leftControllerF = leftDriveF.getClosedLoopController();
 
       leftConfigF = new SparkMaxConfig();
       leftConfigF.inverted(Constants.MotorConstants.FOLLOWER_LEFT_MOTOR_INVERTED);
@@ -125,7 +104,6 @@ public class Drivetrain extends SubsystemBase {
 
       rightDriveL = new SparkMax(Constants.MotorConstants.LEADER_RIGHT_MOTOR_ID,MotorType.kBrushless);
       rightEncoderL = rightDriveL.getEncoder();
-      rightControllerL = rightDriveL.getClosedLoopController();
 
       rightConfigL = new SparkMaxConfig();
       rightConfigL.inverted(Constants.MotorConstants.LEADER_RIGHT_MOTOR_INVERTED);
@@ -140,8 +118,6 @@ public class Drivetrain extends SubsystemBase {
       rightDriveL.configure(rightConfigL, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
       rightDriveF = new SparkMax(Constants.MotorConstants.FOLLOWER_RIGHT_MOTOR_ID,MotorType.kBrushless);
-      rightEncoderF = rightDriveF.getEncoder();
-      rightControllerF = rightDriveF.getClosedLoopController();
 
       rightConfigF = new SparkMaxConfig();
       rightConfigF.inverted(Constants.MotorConstants.FOLLOWER_RIGHT_MOTOR_INVERTED);
