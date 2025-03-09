@@ -183,25 +183,6 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    // // This method will be called once per scheduler run
-    // double leftPositionMetersDelta =
-    //   getLeftPositionMeters() - lastLeftPositionMeters;
-    // double rightPositionMetersDelta =
-    //   getRightPositionMeters() - lastRightPositionMeters;
-    // double avgPositionMetersDelta =
-    //   (leftPositionMetersDelta + rightPositionMetersDelta) / 2.0;
-
-    // // Update the pose based on the average position delta
-    // pose = pose.exp(new Twist2d(
-    //   avgPositionMetersDelta,
-    //   0.0,
-    //   (rightPositionMetersDelta - leftPositionMetersDelta)
-    //               / Constants.DriveConstants.TRACK_WIDTH_METERS));
-    
-    // lastLeftPositionMeters = getLeftPositionMeters();
-    // lastRightPositionMeters = getRightPositionMeters();
-
     Pose2d visionPose = GetBestPose();
 
     wheelPositions = new DifferentialDriveWheelPositions(leftEncoderL.getPosition(), rightEncoderL.getPosition());
@@ -218,17 +199,6 @@ public class Drivetrain extends SubsystemBase {
     return rightEncoderL.getPosition() * Constants.DriveConstants.WHEEL_DIAMETER_METERS;
   }
 
-  // public void setDrive(double left, double right) {
-  //   if (invert == false) {
-  //       differentialDrive.tankDrive(-left, right, true);
-  //       SmartDashboard.putNumber("Left Drive", -left);
-  //       SmartDashboard.putNumber("Right Drive", right);
-  //   } else {
-  //       differentialDrive.tankDrive(right, -left, true);
-  //       SmartDashboard.putNumber("Left Drive", -left);
-  //       SmartDashboard.putNumber("Right Drive", right);
-  //   }  
-  // }
   public void setMotors(double left, double right) {
     setLeftMotors(left);
     setRightMotors(right);

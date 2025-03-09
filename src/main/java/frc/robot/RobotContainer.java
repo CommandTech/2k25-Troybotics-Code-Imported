@@ -44,14 +44,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    SmartDashboard.putNumber("Drive P",Constants.DriveConstants.DRIVE_P);
-    SmartDashboard.putNumber("Drive I",Constants.DriveConstants.DRIVE_I);
-    SmartDashboard.putNumber("Drive D",Constants.DriveConstants.DRIVE_D);
-
-    SmartDashboard.putNumber("Arm P",Constants.ArmConstants.ARM_P);
-    SmartDashboard.putNumber("Arm I",Constants.ArmConstants.ARM_I);
-    SmartDashboard.putNumber("Arm D",Constants.ArmConstants.ARM_D);
-
     m_arm.setDefaultCommand(m_arm.idleCommand());
     m_drive.setDefaultCommand(m_drive.driveCommand(getDriver().getLeftY(),getDriver().getRightX()));
     m_coral.setDefaultCommand(m_coral.intakeCoral());
@@ -93,18 +85,31 @@ public class RobotContainer {
     
     m_manipController.x().onTrue(m_climber.toggleClimber());
   }
-  public CommandXboxController getDriver() {
-    return m_driverController;
-  }
-
-  public CommandXboxController getManipulator() {
-    return m_manipController;
-  }
 
   public static RobotContainer getInstance() {
     return m_robotContainer;
   }
-
+  public CommandXboxController getDriver() {
+    return m_driverController;
+  }
+  public CommandXboxController getManipulator() {
+    return m_manipController;
+  }
+  public Drivetrain getDrivetrain() {
+    return m_drive;
+  }
+  public Arm getArm() {
+    return m_arm;
+  }
+  public Coral getCoral() {
+    return m_coral;
+  }
+  public Algae getAlgae() {
+    return m_algae;
+  }
+  public Climber getClimber() {
+    return m_climber;
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
