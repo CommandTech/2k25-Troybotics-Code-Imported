@@ -9,6 +9,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,6 +61,8 @@ public class RobotContainer {
     m_algae.setDefaultCommand(m_algae.intakeAlgae());
     m_climber.setDefaultCommand(m_climber.idleCommand());
     
+    NamedCommands.registerCommand("deliverCoral", m_coral.deliverCoral());
+
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.addOption("Leave", m_drive.followPathCommand("Leave"));
     autoChooser.addOption("Auto RP", m_drive.followPathCommand("Auto RP"));
